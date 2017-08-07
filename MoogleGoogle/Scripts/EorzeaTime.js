@@ -18,13 +18,11 @@ function showTime() {
     d.setTime(global.eorzeaTime);
     var eTime = document.getElementById('e-time');
     var hours = d.getUTCHours();
-    var ampm = hours > 11 ? "PM" : "AM";
-    if (hours > 12)
-        hours -= 12;
+
     hours = padLeft(hours);
     var minutes = d.getUTCMinutes();
     minutes = padLeft(minutes);
-    eTime.innerHTML = hours + ":" + minutes + " " + ampm;
+    eTime.innerHTML = hours + ":" + minutes;
 }
 function padLeft(val) {
     var str = "" + val;

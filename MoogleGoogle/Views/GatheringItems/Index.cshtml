@@ -6,12 +6,15 @@
 }
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Gathering Clock";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<span class="halflings halflings-time"></span>
-<div id='e-time' class="glyphicons glyphicons-time"></div>
+<div class="clock-wrapper">
+
+    <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
+
+</div>
 
 <table class="table">
     <tr>
@@ -81,7 +84,7 @@
             @Html.DisplayFor(modelItem => item.Type)
         </td>
         <td>
-            <a href="#" class="btn btn-primary">Track</a>
+            <a href="#" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i></a>
 
         </td>
     </tr>

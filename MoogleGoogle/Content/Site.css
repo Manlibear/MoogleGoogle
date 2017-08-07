@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.clock-wrapper {
+    display: flex;
+    font-size: 70px;
+}
+
+.clock-icon {
+    margin: 7px 10px 0 0;
+}
