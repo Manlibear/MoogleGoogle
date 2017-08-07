@@ -29,5 +29,7 @@ namespace MoogleGoogle.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<MoogleGoogle.Models.GatheringItem> GatheringItems { get; set; }
     }
 }
