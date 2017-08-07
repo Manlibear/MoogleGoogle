@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<MoogleGoogle.Models.GatheringItem>
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/EorzeaTime.js")"></script>
+
+}
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<span class="halflings halflings-time"></span>
+<div id='e-time' class="glyphicons glyphicons-time"></div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -51,10 +54,10 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TimeStart)
+            @Html.DisplayFor(modelItem => item.TimeStartReadable)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TimeEnd)
+            @Html.DisplayFor(modelItem => item.TimeEndReadable)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Slot)
@@ -78,9 +81,8 @@
             @Html.DisplayFor(modelItem => item.Type)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            <a href="#" class="btn btn-primary">Track</a>
+
         </td>
     </tr>
 }

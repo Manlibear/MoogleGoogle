@@ -199,13 +199,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\EorzeaTime.cs" />
-    <Compile Include="Migrations\201708021219423_InitialCreate.cs" />
-    <Compile Include="Migrations\201708021219423_InitialCreate.Designer.cs">
-      <DependentUpon>201708021219423_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201708021259058_InitialCreate.cs" />
+    <Compile Include="Migrations\201708021259058_InitialCreate.Designer.cs">
+      <DependentUpon>201708021259058_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201708071249361_GatheringItem.cs" />
     <Compile Include="Migrations\201708071249361_GatheringItem.Designer.cs">
       <DependentUpon>201708071249361_GatheringItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708071442087_GatheringItems TimeEnd, TimeStart to numeric.cs" />
+    <Compile Include="Migrations\201708071442087_GatheringItems TimeEnd, TimeStart to numeric.Designer.cs">
+      <DependentUpon>201708071442087_GatheringItems TimeEnd, TimeStart to numeric.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -230,6 +234,7 @@
     <None Include="Properties\PublishProfiles\MoogleGoogle - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\MoogleGoogle - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\EorzeaTime.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -282,6 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="SQL\" />
     <Folder Include="Views\Gathering\" />
   </ItemGroup>
   <ItemGroup>
@@ -300,11 +306,14 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201708021219423_InitialCreate.resx">
-      <DependentUpon>201708021219423_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201708021259058_InitialCreate.resx">
+      <DependentUpon>201708021259058_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708071249361_GatheringItem.resx">
       <DependentUpon>201708071249361_GatheringItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708071442087_GatheringItems TimeEnd, TimeStart to numeric.resx">
+      <DependentUpon>201708071442087_GatheringItems TimeEnd, TimeStart to numeric.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

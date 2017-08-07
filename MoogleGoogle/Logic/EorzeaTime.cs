@@ -34,6 +34,19 @@ namespace MoogleGoogle.Logic
             }
             set { }
         }
+
+        public static DateTime ConvertFromDBTime(double DBTime)
+        {
+            double hours = 0;
+            double minutes = 0;
+            double mod = (DBTime * 24) % 1;
+
+            hours = (DBTime * 24) - mod;
+            minutes = Math.Ceiling(mod * 60);
+
+            return new DateTime(1, 1, 1).AddHours(hours).AddMinutes(minutes);
+
+        }
     }
 
     

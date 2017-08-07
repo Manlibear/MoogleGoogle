@@ -13,7 +13,7 @@ namespace MoogleGoogle.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201708021219423_InitialCreate"; }
+            get { return "201708021259058_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source
