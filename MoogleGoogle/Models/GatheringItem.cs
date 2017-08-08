@@ -22,7 +22,7 @@ namespace MoogleGoogle.Models
         public string Position { get; set; }
         public string FastestRoute { get; set; }
         public string Level { get; set; }
-        public string Perfecption { get; set; }
+        public string Perception { get; set; }
         public string Type { get; set; }
 
         [NotMapped]

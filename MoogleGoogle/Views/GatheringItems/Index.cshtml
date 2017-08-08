@@ -9,7 +9,7 @@
     <div class="grid-sizer"></div>
 </div>
 
-<div class="col-md-6">
+<div class="col-md-7">
     <div class="clock-wrapper">
 
         <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
@@ -19,15 +19,15 @@
 
 
 <div class="col-md-4 small-padding-top">
-    <input type="text" class="form-control">
+    <input type="text" class="form-control  pull-right">
 </div>
 
-<div class="col-md-2 small-padding-top">
+<div class="col-md-1 small-padding-top">
 
-    <button class="btn btn-primary" id="basic-addon2">Search</button>
+    <button class="btn btn-primary">Search</button>
 </div>
 
-<br style="clear:both"/>
+<br style="clear:both" />
 
 <table class="table" id="gatheringTable">
     <tr>
@@ -56,7 +56,7 @@
             @Html.DisplayNameFor(model => model.Level)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Perfecption)
+            @Html.DisplayNameFor(model => model.Perception)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Type)
@@ -92,10 +92,16 @@
                 @Html.DisplayFor(modelItem => item.Level)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Perfecption)
+                @Html.DisplayFor(modelItem => item.Perception)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td style="display:none">
+                @item.TimeStart
+            </td>
+            <td style="display:none">
+                @item.TimeEnd
             </td>
             <td>
                 <button id="btnAdd-@item.ID" class="btn btn-primary btn-sm" onclick="addTrack(@item.ID)"><i class="glyphicon glyphicon-plus"></i></button>
@@ -116,6 +122,29 @@
 
         var trackingList = [];
 
+        E_TIME.tickFunction = function () {
+            //check to see if any time frames have been hit
+
+            for (var i = 0; i < trackingList.length; i++) {
+                $('#gathering-panel-' + trackingList[i].ID).addClass("active");
+
+                if (trackingList[i].TimeSortStart < E_TIME.eorzeaTimeKey && trackingList[i].TimeSortEnd > E_TIME.eorzeaTimeKey) {
+
+                    $('#gathering-panel-' + trackingList[i].ID).addClass("active");
+                } else {
+
+                    $('#gathering-panel-' + trackingList[i].ID).removeClass("active");
+                }
+            }
+
+
+            $grid.isotope('updateSortData').isotope(); //now sort
+        }
+
+
+        
+
+
         var $grid = $('#iso-grid-gathering').isotope({
             // specify itemSelector so stamps do get laid out
             itemSelector: '.iso-grid-item',
@@ -123,12 +152,29 @@
             masonry: {
                 // set to the element
                 columnWidth: '.grid-sizer'
-            }
+            },
+            getSortData: {
+                timeSort: function (itemElem) {
+
+
+                    // get text of .weight element
+                    var tsStart = parseFloat($(itemElem).find('.timeSortStart').text());
+                    var tsEnd = parseFloat($(itemElem).find('.timeSortEnd').text());
+
+                    if (tsStart < E_TIME.eorzeaTimeKey && tsEnd < E_TIME.eorzeaTimeKey) {
+                        tsStart += 1;
+                    }
+
+                    return tsStart;
+                }
+            },
+            sortBy: ['timeSort']
         });
 
         function addTrack(rowId) {
 
             //get the row with the pressed button
+            //TODO: This needs to be changed as array index will not always equal rowId, this is lazy and dangerous
             var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
 
             //create an object to represent the gathering item to track
@@ -144,6 +190,8 @@
             gatheringItem.Level = row.cells[7].innerText;
             gatheringItem.Perception = row.cells[8].innerText;
             gatheringItem.Type = row.cells[9].innerText;
+            gatheringItem.TimeSortStart = parseFloat(row.cells[10].innerText);
+            gatheringItem.TimeSortEnd = parseFloat(row.cells[11].innerText);
 
             var found = false; //check to see if this row has already been added to the array
             for (var i = 0; i < trackingList.length; i++) {
@@ -157,11 +205,20 @@
 
                 trackingList.push(gatheringItem);
 
-                var $content = $('<div class="panel panel-default iso-grid-item">' +
+                var active = false;
+
+                if (gatheringItem.TimeSortStart < E_TIME.eorzeaTimeKey && gatheringItem.TimeSortEnd > E_TIME.eorzeaTimeKey) {
+                    active = true;
+                }
+
+                var $content = $('<div id="gathering-panel-' + gatheringItem.ID + '" class="panel panel-default iso-grid-item ' + (active ? "active" : "") + '">' +
                     '<div class="panel-body">' +
+                    '<p class="timeSortStart" style="display:none">' + gatheringItem.TimeSortStart + '</p>' +
+                    '<p class="timeSortEnd" style="display:none">' + gatheringItem.TimeSortEnd + '</p>' +
                     '<p>' + gatheringItem.Name + '</p>' +
                     '<p>' + gatheringItem.Zone + '</p>' +
                     '<p>' + gatheringItem.Position + '</p>' +
+                    '<p>' + gatheringItem.TimeStart + ' - ' + gatheringItem.TimeEnd + '</p>' +
                     '</div>' +
                     '</div>');
 
@@ -170,6 +227,11 @@
 
                 $('#btnAdd-' + rowId).removeClass("btn-primary").addClass("btn-success");
                 $('#btnAdd-' + rowId).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
+
+
+
+
+                $grid.isotope('updateSortData').isotope();
             }
 
         }

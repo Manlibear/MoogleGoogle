@@ -211,6 +211,10 @@
     <Compile Include="Migrations\201708071442087_GatheringItems TimeEnd, TimeStart to numeric.Designer.cs">
       <DependentUpon>201708071442087_GatheringItems TimeEnd, TimeStart to numeric.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708080755075_Fixed GathingItem.Perception spelling.cs" />
+    <Compile Include="Migrations\201708080755075_Fixed GathingItem.Perception spelling.Designer.cs">
+      <DependentUpon>201708080755075_Fixed GathingItem.Perception spelling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\GatheringItem.cs" />
@@ -248,6 +252,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="SQL\FilleGatheringItems.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -290,7 +295,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="SQL\" />
     <Folder Include="Views\Gathering\" />
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708071442087_GatheringItems TimeEnd, TimeStart to numeric.resx">
       <DependentUpon>201708071442087_GatheringItems TimeEnd, TimeStart to numeric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708080755075_Fixed GathingItem.Perception spelling.resx">
+      <DependentUpon>201708080755075_Fixed GathingItem.Perception spelling.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

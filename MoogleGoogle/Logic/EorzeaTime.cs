@@ -37,6 +37,7 @@ namespace MoogleGoogle.Logic
 
         public static DateTime ConvertFromDBTime(double DBTime)
         {
+            // 0.25 - 0.329861111111111       ->           06:00 - 07:55
             double hours = 0;
             double minutes = 0;
             double mod = (DBTime * 24) % 1;
@@ -46,6 +47,15 @@ namespace MoogleGoogle.Logic
 
             return new DateTime(1, 1, 1).AddHours(hours).AddMinutes(minutes);
 
+        }
+
+        public static double ConvertToDBTime(DateTime dt)
+        {
+            // 06:00 - 07:55        ->           0.25 - 0.329861111111111
+            double totalMinsInDay = 24 * 60;
+            double mins = (dt.Hour * 60) + dt.Minute;
+            
+            return (mins / totalMinsInDay) + (mins % totalMinsInDay);
         }
     }
 
