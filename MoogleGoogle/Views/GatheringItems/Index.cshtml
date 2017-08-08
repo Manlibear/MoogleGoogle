@@ -1,22 +1,35 @@
 ﻿@model IEnumerable<MoogleGoogle.Models.GatheringItem>
-@section Scripts
-{
-    <script src="@Url.Content("~/Scripts/EorzeaTime.js")"></script>
-
-}
-
 @{
     ViewBag.Title = "Gathering Clock";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="clock-wrapper">
 
-    <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
-
+<div id="iso-grid-gathering" class="small-padding-top">
+    <div class="grid-sizer"></div>
 </div>
 
-<table class="table">
+<div class="col-md-6">
+    <div class="clock-wrapper">
+
+        <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
+
+    </div>
+</div>
+
+
+<div class="col-md-4 small-padding-top">
+    <input type="text" class="form-control">
+</div>
+
+<div class="col-md-2 small-padding-top">
+
+    <button class="btn btn-primary" id="basic-addon2">Search</button>
+</div>
+
+<br style="clear:both"/>
+
+<table class="table" id="gatheringTable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -51,43 +64,119 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeStartReadable)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeEndReadable)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Slot)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Zone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Position)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FastestRoute)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Level)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Perfecption)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            <a href="#" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-plus"></i></a>
+    @foreach (var item in Model)
+    {
+        <tr data-row-id="@item.ID">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeStartReadable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeEndReadable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Slot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Position)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FastestRoute)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Perfecption)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <button id="btnAdd-@item.ID" class="btn btn-primary btn-sm" onclick="addTrack(@item.ID)"><i class="glyphicon glyphicon-plus"></i></button>
 
-        </td>
-    </tr>
-}
+            </td>
+        </tr>
+    }
 
 </table>
+
+
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/EorzeaTime.js")"></script>
+    <script src="@Url.Content("~/Scripts/isotope.min.js")"></script>
+
+    <script type="text/javascript">
+
+        var trackingList = [];
+
+        var $grid = $('#iso-grid-gathering').isotope({
+            // specify itemSelector so stamps do get laid out
+            itemSelector: '.iso-grid-item',
+            percentPosition: true,
+            masonry: {
+                // set to the element
+                columnWidth: '.grid-sizer'
+            }
+        });
+
+        function addTrack(rowId) {
+
+            //get the row with the pressed button
+            var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
+
+            //create an object to represent the gathering item to track
+            var gatheringItem = {};
+            gatheringItem.ID = row.dataset.rowId;
+            gatheringItem.Name = row.cells[0].innerText;
+            gatheringItem.TimeStart = row.cells[1].innerText;
+            gatheringItem.TimeEnd = row.cells[2].innerText;
+            gatheringItem.Slot = row.cells[3].innerText;
+            gatheringItem.Zone = row.cells[4].innerText;
+            gatheringItem.Position = row.cells[5].innerText;
+            gatheringItem.FastestRoute = row.cells[6].innerText;
+            gatheringItem.Level = row.cells[7].innerText;
+            gatheringItem.Perception = row.cells[8].innerText;
+            gatheringItem.Type = row.cells[9].innerText;
+
+            var found = false; //check to see if this row has already been added to the array
+            for (var i = 0; i < trackingList.length; i++) {
+                if (trackingList[i].ID == gatheringItem.ID) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) { //if it's not already in the array, then add it
+
+                trackingList.push(gatheringItem);
+
+                var $content = $('<div class="panel panel-default iso-grid-item">' +
+                    '<div class="panel-body">' +
+                    '<p>' + gatheringItem.Name + '</p>' +
+                    '<p>' + gatheringItem.Zone + '</p>' +
+                    '<p>' + gatheringItem.Position + '</p>' +
+                    '</div>' +
+                    '</div>');
+
+
+                $grid.append($content).isotope('appended', $content)
+
+                $('#btnAdd-' + rowId).removeClass("btn-primary").addClass("btn-success");
+                $('#btnAdd-' + rowId).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
+            }
+
+        }
+
+
+    </script>
+
+
+
+}

@@ -31,4 +31,33 @@ textarea {
 
 .clock-icon {
     margin: 7px 10px 0 0;
+    color: #9F2637;
+}
+
+.iso-grid-item {
+    width: 24%;
+    text-align: center;
+}
+
+.grid-sizer {
+    width: 25%;
+}
+
+
+
+.panel {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+    .panel.active {
+        color: #fff;
+        background-color: #9F2637;
+    }
+
+.small-padding-top {
+    padding-top: 35px;
 }
