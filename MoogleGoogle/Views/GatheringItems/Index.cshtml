@@ -5,240 +5,253 @@
 }
 
 
-<div id="iso-grid-gathering" class="small-padding-top">
-    <div class="grid-sizer"></div>
-</div>
-
-<div class="col-md-7">
-    <div class="clock-wrapper">
-
-        <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
-
+<div class="row">
+    <div id="iso-grid-gathering" class="small-padding-top">
+        <div class="grid-sizer"></div>
     </div>
 </div>
 
 
-<div class="col-md-4 small-padding-top">
-    <input type="text" class="form-control  pull-right">
-</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-7">
+        <input type="text" class="form-control  pull-right">
+    </div>
 
-<div class="col-md-1 small-padding-top">
+    <div class="col-md-1 ">
 
-    <button class="btn btn-primary">Search</button>
-</div>
+        <button class="btn btn-primary">Search</button>
+    </div>
 
-<br style="clear:both" />
+    </div>
+<div class="row">
 
-<table class="table" id="gatheringTable">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeStart)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeEnd)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Slot)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Zone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Position)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FastestRoute)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Level)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Perception)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Type)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr data-row-id="@item.ID">
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStartReadable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeEndReadable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Slot)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Zone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Position)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FastestRoute)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Perception)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td style="display:none">
-                @item.TimeStart
-            </td>
-            <td style="display:none">
-                @item.TimeEnd
-            </td>
-            <td>
-                <button id="btnAdd-@item.ID" class="btn btn-primary btn-sm" onclick="addTrack(@item.ID)"><i class="glyphicon glyphicon-plus"></i></button>
-
-            </td>
+    <table class="table" id="gatheringTable">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Zone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Position)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FastestRoute)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Perception)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr data-row-id="@item.ID">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeStartReadable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeEndReadable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slot)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Zone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FastestRoute)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Perception)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td style="display:none">
+                    @item.TimeStart
+                </td>
+                <td style="display:none">
+                    @item.TimeEnd
+                </td>
+                <td>
+                    <button id="btnAdd-@item.ID" class="btn btn-primary btn-sm" onclick="addTrack(@item.ID)"><i class="glyphicon glyphicon-plus"></i></button>
 
-
-@section Scripts
-{
-    <script src="@Url.Content("~/Scripts/EorzeaTime.js")"></script>
-    <script src="@Url.Content("~/Scripts/isotope.min.js")"></script>
-
-    <script type="text/javascript">
-
-        var trackingList = [];
-
-        E_TIME.tickFunction = function () {
-            //check to see if any time frames have been hit
-
-            for (var i = 0; i < trackingList.length; i++) {
-                $('#gathering-panel-' + trackingList[i].ID).addClass("active");
-
-                if (trackingList[i].TimeSortStart < E_TIME.eorzeaTimeKey && trackingList[i].TimeSortEnd > E_TIME.eorzeaTimeKey) {
-
-                    $('#gathering-panel-' + trackingList[i].ID).addClass("active");
-                } else {
-
-                    $('#gathering-panel-' + trackingList[i].ID).removeClass("active");
-                }
-            }
-
-
-            $grid.isotope('updateSortData').isotope(); //now sort
+                </td>
+            </tr>
         }
 
-
-        
-
-
-        var $grid = $('#iso-grid-gathering').isotope({
-            // specify itemSelector so stamps do get laid out
-            itemSelector: '.iso-grid-item',
-            percentPosition: true,
-            masonry: {
-                // set to the element
-                columnWidth: '.grid-sizer'
-            },
-            getSortData: {
-                timeSort: function (itemElem) {
+    </table>
+    </div>  
 
 
-                    // get text of .weight element
-                    var tsStart = parseFloat($(itemElem).find('.timeSortStart').text());
-                    var tsEnd = parseFloat($(itemElem).find('.timeSortEnd').text());
+    @section Scripts
+{
+        <script src="@Url.Content("~/Scripts/isotope.min.js")"></script>
 
-                    if (tsStart < E_TIME.eorzeaTimeKey && tsEnd < E_TIME.eorzeaTimeKey) {
-                        tsStart += 1;
+        <script type="text/javascript">
+
+            var trackingList = [];
+
+            E_TIME.tickFunction = function () {
+                //check to see if any time frames have been hit
+
+                for (var i = 0; i < trackingList.length; i++) {
+                    $('#gathering-panel-' + trackingList[i].ID).addClass("active");
+
+                    if (trackingList[i].TimeSortStart < E_TIME.eorzeaTimeKey && trackingList[i].TimeSortEnd > E_TIME.eorzeaTimeKey) {
+
+                        $('#gathering-panel-' + trackingList[i].ID).addClass("active");
+                    } else {
+
+                        $('#gathering-panel-' + trackingList[i].ID).removeClass("active");
+                    }
+                }
+
+
+                $grid.isotope('updateSortData').isotope(); //now sort
+            }
+
+            $('.boxclose').click(function () {
+
+                $grid.isotope('remove', this);
+
+
+            });
+
+          
+
+
+            var $grid = $('#iso-grid-gathering').isotope({
+                // specify itemSelector so stamps do get laid out
+                itemSelector: '.iso-grid-item',
+                percentPosition: true,
+                masonry: {
+                    // set to the element
+                    columnWidth: '.grid-sizer'
+                },
+                getSortData: {
+                    timeSort: function (itemElem) {
+
+
+                        // get text of .weight element
+                        var tsStart = parseFloat($(itemElem).find('.timeSortStart').text());
+                        var tsEnd = parseFloat($(itemElem).find('.timeSortEnd').text());
+
+                        if (tsStart < E_TIME.eorzeaTimeKey && tsEnd < E_TIME.eorzeaTimeKey) {
+                            tsStart += 1;
+                        }
+
+                        return tsStart;
+                    }
+                },
+                sortBy: ['timeSort']
+            });
+
+            function removeTrack(id) {
+
+                $grid.isotope('remove', $('#gathering-panel-' + id));
+
+                $('#btnAdd-' + id).removeClass("btn-success").addClass("btn-primary");
+                $('#btnAdd-' + id).children("i").removeClass("glyphicon-check").addClass("glyphicon-plus");
+            }
+
+            
+
+            function addTrack(rowId) {
+
+                //get the row with the pressed button
+                //TODO: This needs to be changed as array index will not always equal rowId, this is lazy and dangerous
+                var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
+
+                //create an object to represent the gathering item to track
+                var gatheringItem = {};
+                gatheringItem.ID = row.dataset.rowId;
+                gatheringItem.Name = row.cells[0].innerText;
+                gatheringItem.TimeStart = row.cells[1].innerText;
+                gatheringItem.TimeEnd = row.cells[2].innerText;
+                gatheringItem.Slot = row.cells[3].innerText;
+                gatheringItem.Zone = row.cells[4].innerText;
+                gatheringItem.Position = row.cells[5].innerText;
+                gatheringItem.FastestRoute = row.cells[6].innerText;
+                gatheringItem.Level = row.cells[7].innerText;
+                gatheringItem.Perception = row.cells[8].innerText;
+                gatheringItem.Type = row.cells[9].innerText;
+                gatheringItem.TimeSortStart = parseFloat(row.cells[10].innerText);
+                gatheringItem.TimeSortEnd = parseFloat(row.cells[11].innerText);
+
+                var found = false; //check to see if this row has already been added to the array
+                for (var i = 0; i < trackingList.length; i++) {
+                    if (trackingList[i].ID == gatheringItem.ID) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) { //if it's not already in the array, then add it
+
+                    trackingList.push(gatheringItem);
+
+                    var active = false;
+
+                    if (gatheringItem.TimeSortStart < E_TIME.eorzeaTimeKey && gatheringItem.TimeSortEnd > E_TIME.eorzeaTimeKey) {
+                        active = true;
                     }
 
-                    return tsStart;
+                    var $content = $('<div id="gathering-panel-' + gatheringItem.ID + '" class="panel panel-default iso-grid-item ' + (active ? "active" : "") + '">' +
+                        '<div class="panel-body">' +
+                        '<a class="boxclose" onclick="removeTrack(' + gatheringItem.ID + ')"></a>' +
+                        '<p class="timeSortStart" style="display:none">' + gatheringItem.TimeSortStart + '</p>' +
+                        '<p class="timeSortEnd" style="display:none">' + gatheringItem.TimeSortEnd + '</p>' +
+                        '<p>' + gatheringItem.Name + '</p>' +
+                        '<p>' + gatheringItem.Zone + '</p>' +
+                        '<p>' + gatheringItem.Position + '</p>' +
+                        '<p>' + gatheringItem.TimeStart + ' - ' + gatheringItem.TimeEnd + '</p>' +
+                        '</div>' +
+                        '</div>');
+
+
+                    $grid.append($content).isotope('appended', $content)
+
+                    $('#btnAdd-' + rowId).removeClass("btn-primary").addClass("btn-success");
+                    $('#btnAdd-' + rowId).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
+
+
+
+
+                    $grid.isotope('updateSortData').isotope();
                 }
-            },
-            sortBy: ['timeSort']
-        });
 
-        function addTrack(rowId) {
-
-            //get the row with the pressed button
-            //TODO: This needs to be changed as array index will not always equal rowId, this is lazy and dangerous
-            var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
-
-            //create an object to represent the gathering item to track
-            var gatheringItem = {};
-            gatheringItem.ID = row.dataset.rowId;
-            gatheringItem.Name = row.cells[0].innerText;
-            gatheringItem.TimeStart = row.cells[1].innerText;
-            gatheringItem.TimeEnd = row.cells[2].innerText;
-            gatheringItem.Slot = row.cells[3].innerText;
-            gatheringItem.Zone = row.cells[4].innerText;
-            gatheringItem.Position = row.cells[5].innerText;
-            gatheringItem.FastestRoute = row.cells[6].innerText;
-            gatheringItem.Level = row.cells[7].innerText;
-            gatheringItem.Perception = row.cells[8].innerText;
-            gatheringItem.Type = row.cells[9].innerText;
-            gatheringItem.TimeSortStart = parseFloat(row.cells[10].innerText);
-            gatheringItem.TimeSortEnd = parseFloat(row.cells[11].innerText);
-
-            var found = false; //check to see if this row has already been added to the array
-            for (var i = 0; i < trackingList.length; i++) {
-                if (trackingList[i].ID == gatheringItem.ID) {
-                    found = true;
-                    break;
-                }
             }
 
-            if (!found) { //if it's not already in the array, then add it
 
-                trackingList.push(gatheringItem);
-
-                var active = false;
-
-                if (gatheringItem.TimeSortStart < E_TIME.eorzeaTimeKey && gatheringItem.TimeSortEnd > E_TIME.eorzeaTimeKey) {
-                    active = true;
-                }
-
-                var $content = $('<div id="gathering-panel-' + gatheringItem.ID + '" class="panel panel-default iso-grid-item ' + (active ? "active" : "") + '">' +
-                    '<div class="panel-body">' +
-                    '<p class="timeSortStart" style="display:none">' + gatheringItem.TimeSortStart + '</p>' +
-                    '<p class="timeSortEnd" style="display:none">' + gatheringItem.TimeSortEnd + '</p>' +
-                    '<p>' + gatheringItem.Name + '</p>' +
-                    '<p>' + gatheringItem.Zone + '</p>' +
-                    '<p>' + gatheringItem.Position + '</p>' +
-                    '<p>' + gatheringItem.TimeStart + ' - ' + gatheringItem.TimeEnd + '</p>' +
-                    '</div>' +
-                    '</div>');
-
-
-                $grid.append($content).isotope('appended', $content)
-
-                $('#btnAdd-' + rowId).removeClass("btn-primary").addClass("btn-success");
-                $('#btnAdd-' + rowId).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
+        </script>
 
 
 
-
-                $grid.isotope('updateSortData').isotope();
-            }
-
-        }
-
-
-    </script>
-
-
-
-}
+    }

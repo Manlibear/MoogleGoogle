@@ -10,6 +10,14 @@
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+
+            <li>
+                <div class="clock-wrapper">
+
+                    <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
+
+                </div>
+            </li>
         </ul>
     }
 }
@@ -36,6 +44,14 @@ else
 
                 <span class="glyphicon glyphicon-user"></span>
             </a>
+        </li>
+
+        <li>
+            <div class="clock-wrapper">
+
+                <div class="glyphicon glyphicon-time clock-icon"></div> <div id='e-time'></div>
+
+            </div>
         </li>
 
         @*<li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
