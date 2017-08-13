@@ -22,7 +22,7 @@
         <button class="btn btn-primary">Search</button>
     </div>
 
-    </div>
+</div>
 <div class="row">
 
     <table class="table" id="gatheringTable">
@@ -107,151 +107,196 @@
         }
 
     </table>
-    </div>  
+</div>
 
 
-    @section Scripts
+@section Scripts
 {
-        <script src="@Url.Content("~/Scripts/isotope.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/isotope.min.js")"></script>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
 
-            var trackingList = [];
+        var trackingList = [];
 
-            E_TIME.tickFunction = function () {
-                //check to see if any time frames have been hit
+        $(document).ready(function () {
+
+
+            if (!Cookies.get('trackingList')) {
+                Cookies.set('trackingList', JSON.stringify(trackingList));
+
+            } else {
+
+                var trackingList = JSON.parse(Cookies.get('trackingList'));
 
                 for (var i = 0; i < trackingList.length; i++) {
+                    trackingList[i].Alert = false;
+                    renderTrackCard(trackingList[i]);
+                }
+            }
+
+
+        });
+
+        E_TIME.tickFunction = function () {
+            //check to see if any time frames have been hit
+
+            for (var i = 0; i < trackingList.length; i++) {
+                $('#gathering-panel-' + trackingList[i].ID).addClass("active");
+
+                if (trackingList[i].TimeSortStart < E_TIME.eorzeaTimeKey && trackingList[i].TimeSortEnd > E_TIME.eorzeaTimeKey) {
+
                     $('#gathering-panel-' + trackingList[i].ID).addClass("active");
 
-                    if (trackingList[i].TimeSortStart < E_TIME.eorzeaTimeKey && trackingList[i].TimeSortEnd > E_TIME.eorzeaTimeKey) {
+                    if (trackingList[i].Alert) {
+                        trackingList[i].Alert = false;
 
-                        $('#gathering-panel-' + trackingList[i].ID).addClass("active");
-                    } else {
+                        var alertSound = new Audio('/Audio/alert.mp3');
+                        alertSound.Loop = false;
+                        alertSound.play();
 
-                        $('#gathering-panel-' + trackingList[i].ID).removeClass("active");
+                        var popup = {};
+                        popup.Title = "Node Spawned: " + trackingList[i].Name + " (" + trackingList[i].Slot + ")";
+                        popup.Body = trackingList[i].Zone + " " + trackingList[i].Position;
+                        notify(popup);
                     }
+
+                } else {
+
+                    trackingList[i].Alert = true;
+                    $('#gathering-panel-' + trackingList[i].ID).removeClass("active");
                 }
-
-
-                $grid.isotope('updateSortData').isotope(); //now sort
-            }
-
-            $('.boxclose').click(function () {
-
-                $grid.isotope('remove', this);
-
-
-            });
-
-          
-
-
-            var $grid = $('#iso-grid-gathering').isotope({
-                // specify itemSelector so stamps do get laid out
-                itemSelector: '.iso-grid-item',
-                percentPosition: true,
-                masonry: {
-                    // set to the element
-                    columnWidth: '.grid-sizer'
-                },
-                getSortData: {
-                    timeSort: function (itemElem) {
-
-
-                        // get text of .weight element
-                        var tsStart = parseFloat($(itemElem).find('.timeSortStart').text());
-                        var tsEnd = parseFloat($(itemElem).find('.timeSortEnd').text());
-
-                        if (tsStart < E_TIME.eorzeaTimeKey && tsEnd < E_TIME.eorzeaTimeKey) {
-                            tsStart += 1;
-                        }
-
-                        return tsStart;
-                    }
-                },
-                sortBy: ['timeSort']
-            });
-
-            function removeTrack(id) {
-
-                $grid.isotope('remove', $('#gathering-panel-' + id));
-
-                $('#btnAdd-' + id).removeClass("btn-success").addClass("btn-primary");
-                $('#btnAdd-' + id).children("i").removeClass("glyphicon-check").addClass("glyphicon-plus");
-            }
-
-            
-
-            function addTrack(rowId) {
-
-                //get the row with the pressed button
-                //TODO: This needs to be changed as array index will not always equal rowId, this is lazy and dangerous
-                var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
-
-                //create an object to represent the gathering item to track
-                var gatheringItem = {};
-                gatheringItem.ID = row.dataset.rowId;
-                gatheringItem.Name = row.cells[0].innerText;
-                gatheringItem.TimeStart = row.cells[1].innerText;
-                gatheringItem.TimeEnd = row.cells[2].innerText;
-                gatheringItem.Slot = row.cells[3].innerText;
-                gatheringItem.Zone = row.cells[4].innerText;
-                gatheringItem.Position = row.cells[5].innerText;
-                gatheringItem.FastestRoute = row.cells[6].innerText;
-                gatheringItem.Level = row.cells[7].innerText;
-                gatheringItem.Perception = row.cells[8].innerText;
-                gatheringItem.Type = row.cells[9].innerText;
-                gatheringItem.TimeSortStart = parseFloat(row.cells[10].innerText);
-                gatheringItem.TimeSortEnd = parseFloat(row.cells[11].innerText);
-
-                var found = false; //check to see if this row has already been added to the array
-                for (var i = 0; i < trackingList.length; i++) {
-                    if (trackingList[i].ID == gatheringItem.ID) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) { //if it's not already in the array, then add it
-
-                    trackingList.push(gatheringItem);
-
-                    var active = false;
-
-                    if (gatheringItem.TimeSortStart < E_TIME.eorzeaTimeKey && gatheringItem.TimeSortEnd > E_TIME.eorzeaTimeKey) {
-                        active = true;
-                    }
-
-                    var $content = $('<div id="gathering-panel-' + gatheringItem.ID + '" class="panel panel-default iso-grid-item ' + (active ? "active" : "") + '">' +
-                        '<div class="panel-body">' +
-                        '<a class="boxclose" onclick="removeTrack(' + gatheringItem.ID + ')"></a>' +
-                        '<p class="timeSortStart" style="display:none">' + gatheringItem.TimeSortStart + '</p>' +
-                        '<p class="timeSortEnd" style="display:none">' + gatheringItem.TimeSortEnd + '</p>' +
-                        '<p>' + gatheringItem.Name + '</p>' +
-                        '<p>' + gatheringItem.Zone + '</p>' +
-                        '<p>' + gatheringItem.Position + '</p>' +
-                        '<p>' + gatheringItem.TimeStart + ' - ' + gatheringItem.TimeEnd + '</p>' +
-                        '</div>' +
-                        '</div>');
-
-
-                    $grid.append($content).isotope('appended', $content)
-
-                    $('#btnAdd-' + rowId).removeClass("btn-primary").addClass("btn-success");
-                    $('#btnAdd-' + rowId).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
-
-
-
-
-                    $grid.isotope('updateSortData').isotope();
-                }
-
             }
 
 
-        </script>
+            $grid.isotope('updateSortData').isotope(); //now sort
+        }
 
 
 
-    }
+
+        var $grid = $('#iso-grid-gathering').isotope({
+            // specify itemSelector so stamps do get laid out
+            itemSelector: '.iso-grid-item',
+            percentPosition: true,
+            masonry: {
+                // set to the element
+                columnWidth: '.grid-sizer'
+            },
+            getSortData: {
+                timeSort: function (itemElem) {
+
+
+                    // get text of .weight element
+                    var tsStart = parseFloat($(itemElem).find('.timeSortStart').text());
+                    var tsEnd = parseFloat($(itemElem).find('.timeSortEnd').text());
+
+                    if (tsStart < E_TIME.eorzeaTimeKey && tsEnd < E_TIME.eorzeaTimeKey) {
+                        tsStart += 1;
+                    }
+
+                    return tsStart;
+                }
+            },
+            sortBy: ['timeSort']
+        });
+
+        function removeTrack(id) {
+
+            $grid.isotope('remove', $('#gathering-panel-' + id));
+
+            $('#btnAdd-' + id).removeClass("btn-success").addClass("btn-primary");
+            $('#btnAdd-' + id).children("i").removeClass("glyphicon-check").addClass("glyphicon-plus");
+
+            var removeID;
+
+            for (var i = 0; i < trackingList.length; i++) {
+                if (trackingList[i].ID == id) {
+                    removeID = i;
+                }
+            }
+
+            trackingList.splice(removeID, 1);
+
+            Cookies.set('trackingList', JSON.stringify(trackingList));
+        }
+
+
+        function addTrack(rowId) {
+
+            //get the row with the pressed button
+            //TODO: This needs to be changed as array index will not always equal rowId, this is lazy and dangerous
+            var row = document.getElementById("gatheringTable").rows[rowId]; //Note: although rowId is zero based, with the first tr being the header row, there is no need to adjust the index
+
+            //create an object to represent the gathering item to track
+            var gatheringItem = {};
+            gatheringItem.ID = row.dataset.rowId;
+            gatheringItem.Name = row.cells[0].innerText;
+            gatheringItem.TimeStart = row.cells[1].innerText;
+            gatheringItem.TimeEnd = row.cells[2].innerText;
+            gatheringItem.Slot = row.cells[3].innerText;
+            gatheringItem.Zone = row.cells[4].innerText;
+            gatheringItem.Position = row.cells[5].innerText;
+            gatheringItem.FastestRoute = row.cells[6].innerText;
+            gatheringItem.Level = row.cells[7].innerText;
+            gatheringItem.Perception = row.cells[8].innerText;
+            gatheringItem.Type = row.cells[9].innerText;
+            gatheringItem.TimeSortStart = parseFloat(row.cells[10].innerText);
+            gatheringItem.TimeSortEnd = parseFloat(row.cells[11].innerText);
+            gatheringItem.Alert = false;
+
+            var found = false; //check to see if this row has already been added to the array
+            for (var i = 0; i < trackingList.length; i++) {
+                if (trackingList[i].ID == gatheringItem.ID) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) { //if it's not already in the array, then add it
+                
+                trackingList.push(gatheringItem);
+
+                renderTrackCard(gatheringItem);
+                Cookies.set('trackingList', JSON.stringify(trackingList));
+
+            }
+
+        }
+
+        function renderTrackCard(gatheringItem) {
+            var active = false;
+
+            if (gatheringItem.TimeSortStart < E_TIME.eorzeaTimeKey && gatheringItem.TimeSortEnd > E_TIME.eorzeaTimeKey) {
+                active = true;
+            }
+
+            var $content = $('<div id="gathering-panel-' + gatheringItem.ID + '" class="panel panel-default iso-grid-item ' + (active ? "active" : "") + '">' +
+                '<div class="panel-body">' +
+                '<a class="boxclose" onclick="removeTrack(' + gatheringItem.ID + ')"></a>' +
+                '<p class="timeSortStart" style="display:none">' + gatheringItem.TimeSortStart + '</p>' +
+                '<p class="timeSortEnd" style="display:none">' + gatheringItem.TimeSortEnd + '</p>' +
+                '<p>' + gatheringItem.Name + '</p>' +
+                '<p>' + gatheringItem.Zone + '</p>' +
+                '<p>' + gatheringItem.Position + '</p>' +
+                '<p>' + gatheringItem.TimeStart + ' - ' + gatheringItem.TimeEnd + '</p>' +
+                '</div>' +
+                '</div>');
+
+
+            $grid.append($content).isotope('appended', $content)
+
+            $('#btnAdd-' + gatheringItem.ID).removeClass("btn-primary").addClass("btn-success");
+            $('#btnAdd-' + gatheringItem.ID).children("i").removeClass("glyphicon-plus").addClass("glyphicon-check");
+
+
+
+
+            $grid.isotope('updateSortData').isotope();
+        }
+
+
+    </script>
+
+
+
+}
